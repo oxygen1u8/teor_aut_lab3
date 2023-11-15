@@ -8,6 +8,7 @@ project(lab3)
 add_executable(${PROJECT_NAME}
     ${SRC_DIR}/main.cpp
     ${SRC_DIR}/pre_comp_table.cpp
+    ${SRC_DIR}/s_couple.cpp
 )
 
 include_directories(

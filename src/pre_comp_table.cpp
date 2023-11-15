@@ -58,24 +58,35 @@ pre_comp_table::pre_comp_table(std::ifstream &state_file, std::ifstream &output_
         }
     }
 
-    // for (uint32_t i = 0; i < states.size(); i++) {
-    //     for (uint32_t j = 0; j < states[i].size(); j++) {
-    //         std::cout << states[i][j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-
-    // std::cout << std::endl;
-
-    // for (uint32_t i = 0; i < outputs.size(); i++) {
-    //     for (uint32_t j = 0; j < outputs[i].size(); j++) {
-    //         std::cout << outputs[i][j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
+    std::vector<s_couple> couples;
+    std::vector<std::vector<s_couple>> pre_table;
 
     uint32_t row_count = states.size();
     uint32_t column_count = states[0].size();
-
     
+    for (uint32_t i = 0; i < column_count - 1; i++) {
+        for (uint32_t j = i + 1; j < column_count; j++) {
+            for (uint32_t k = 0; k < row_count; k++) {
+                if (states[k][i] > 0 && states[k][j] > 0) {
+                    bool comp = true;
+                    if ((outputs[k][i] > 0 && outputs[k][j] > 0) &&
+                        (outputs[k][i] != outputs[k][j])) {
+                        comp = false;
+                    }
+                    uint32_t state1, state2;
+                    if (states[k][i] > states[k][j]) {
+                        state1 = states[k][j];
+                        state2 = states[k][i];
+                    } else {
+                        state1 = states[k][i];
+                        state2 = states[k][j];
+                    }
+                    s_couple tmp(state1, state2, comp);
+                    couples.push_back(tmp);
+                }
+            }
+        }
+    }
+
+    std::cout << "Hello, world!\n";
 }

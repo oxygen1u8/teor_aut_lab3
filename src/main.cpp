@@ -12,6 +12,5 @@ int main()
 
     pre_comp_table _pre_comp_table(state_file, output_file);
 
-    
     return 0;
 }
