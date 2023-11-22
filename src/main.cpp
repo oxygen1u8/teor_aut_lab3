@@ -11,6 +11,8 @@ int main()
     std::ifstream output_file(OUTPUT_TABLE_FILE);
 
     pre_comp_table _pre_comp_table(state_file, output_file);
+    f_comp_table _f_comp_table(_pre_comp_table);
+    s_max_comp _s_max_comp(_f_comp_table);
 
     return 0;
 }

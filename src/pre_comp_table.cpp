@@ -41,8 +41,6 @@ static std::vector<int32_t> parse_string(std::string &str)
 pre_comp_table::pre_comp_table(std::ifstream &state_file, std::ifstream &output_file)
 {
     std::string str;
-    std::vector<std::vector<int32_t>> states;
-    std::vector<std::vector<int32_t>> outputs;
 
     while (!state_file.eof()) {
         std::getline(state_file, str);
@@ -61,32 +59,86 @@ pre_comp_table::pre_comp_table(std::ifstream &state_file, std::ifstream &output_
     std::vector<s_couple> couples;
     std::vector<std::vector<s_couple>> pre_table;
 
-    uint32_t row_count = states.size();
-    uint32_t column_count = states[0].size();
-    
-    for (uint32_t i = 0; i < column_count - 1; i++) {
-        for (uint32_t j = i + 1; j < column_count; j++) {
+    this->row_count = states.size();
+    this->column_count = states[0].size();
+
+    table = new std::vector<s_couple> *[column_count];
+    for (uint32_t i = 0; i < column_count; i++) {
+        table[i] = new std::vector<s_couple> [column_count];
+    }
+
+    int32_t sort_data[2];
+    int32_t tmp;
+
+    int32_t state1, state2;
+
+    bool is_comp = true;
+    for (uint32_t i = 0; i < column_count; i++) {
+        for (uint32_t j = i; j < column_count - 1; j++) {
+            uint32_t real_j = j + 1;
             for (uint32_t k = 0; k < row_count; k++) {
-                if (states[k][i] > 0 && states[k][j] > 0) {
-                    bool comp = true;
-                    if ((outputs[k][i] > 0 && outputs[k][j] > 0) &&
-                        (outputs[k][i] != outputs[k][j])) {
-                        comp = false;
+                if (states[k][i] > 0 && states[k][real_j] > 0) {
+                    for (uint32_t a = 0; a < row_count; a++) {
+                        if (outputs[a][i] > 0 && outputs[a][real_j] > 0
+                            && outputs[a][i] != outputs[a][real_j]) {
+                            is_comp = false;
+                            break;
+                        }
                     }
-                    uint32_t state1, state2;
-                    if (states[k][i] > states[k][j]) {
-                        state1 = states[k][j];
-                        state2 = states[k][i];
-                    } else {
-                        state1 = states[k][i];
-                        state2 = states[k][j];
+                    sort_data[0] = states[k][i];
+                    sort_data[1] = states[k][real_j];
+
+                    if (sort_data[0] > sort_data[1]) {
+                        tmp = sort_data[1];
+                        sort_data[1] = sort_data[0];
+                        sort_data[0] = tmp;
                     }
-                    s_couple tmp(state1, state2, comp);
-                    couples.push_back(tmp);
+
+                    std::vector<s_couple> temp_vector = table[i][real_j];
+                    
+                    bool is_exist = false;
+                    if (temp_vector.size() > 0) {
+                        for (uint32_t i = 0; i < temp_vector.size(); i++) {
+                            if (temp_vector[i].get_state1() == sort_data[0]
+                                && temp_vector[i].get_state2() == sort_data[1]) {
+                                is_exist = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!is_exist) {
+                        table[i][real_j].push_back(s_couple(sort_data[0],
+                            sort_data[1], is_comp));
+                    }
+                    is_comp = true;
                 }
             }
         }
     }
+}
 
-    std::cout << "Hello, world!\n";
+std::vector<s_couple> **pre_comp_table::get_pre_table()
+{
+    return this->table;
+}
+
+std::vector<std::vector<int32_t>> pre_comp_table::get_states()
+{
+    return this->states;
+}
+
+std::vector<std::vector<int32_t>> pre_comp_table::get_outputs()
+{
+    return this->outputs;
+}
+
+pre_comp_table::~pre_comp_table()
+{
+    if (this->table != nullptr) {
+        for (uint32_t i = 0; i < column_count; i++) {
+            delete [] this->table[i];
+        }
+        this->table = nullptr;
+    }
 }

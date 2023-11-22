@@ -9,6 +9,8 @@ add_executable(${PROJECT_NAME}
     ${SRC_DIR}/main.cpp
     ${SRC_DIR}/pre_comp_table.cpp
     ${SRC_DIR}/s_couple.cpp
+    ${SRC_DIR}/f_comp_table.cpp
+    ${SRC_DIR}/s_max_comp.cpp
 )
 
 include_directories(
