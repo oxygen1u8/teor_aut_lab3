@@ -14,5 +14,11 @@ int main()
     f_comp_table _f_comp_table(_pre_comp_table);
     s_max_comp _s_max_comp(_f_comp_table);
 
+    _s_max_comp.sort();
+    _s_max_comp.make_state_table();
+    _s_max_comp.make_output_table();
+
+    _s_max_comp.print();
+
     return 0;
 }

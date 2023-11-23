@@ -52,15 +52,23 @@ class f_comp_table : public comp_table {
         f_comp_table(pre_comp_table &_pre_comp_table);
         int32_t **get_table();
         uint32_t get_table_size();
+        std::vector<std::vector<int32_t>> get_states();
+        std::vector<std::vector<int32_t>> get_outputs();
+
 };
 
 class s_max_comp {
     private:
+        std::vector<std::vector<int32_t>> states;
+        std::vector<std::vector<int32_t>> outputs;
         std::vector<std::vector<int32_t>> max_classes;
+        std::vector<std::vector<int32_t>> new_states;
+        std::vector<std::vector<int32_t>> new_outputs;
     public:
         s_max_comp(f_comp_table &);
         void sort();
-        void make_table();
+        void make_state_table();
+        void make_output_table();
         void print();
 };
 

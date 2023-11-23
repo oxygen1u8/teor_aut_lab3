@@ -81,3 +81,13 @@ uint32_t f_comp_table::get_table_size()
 {
     return this->states.at(0).size();
 }
+
+std::vector<std::vector<int32_t>> f_comp_table::get_states()
+{
+    return this->states;
+}
+
+std::vector<std::vector<int32_t>> f_comp_table::get_outputs()
+{
+    return this->outputs;
+}
